@@ -1,11 +1,20 @@
 import { useState } from "react";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
+import TaskCounter from "./components/TaskCounter";
 import type { Task } from "./types/task";
 
 function App() {
 
   const [tasks, setTasks] = useState<Task[]>([]);
+
+  const totalTasks = tasks.length;
+
+  const completedTasks = tasks.filter(
+    (task) => task.completed,
+  ).length;
+
+  const remainingTasks = totalTasks - completedTasks;
 
   function addTask(title: string) {
     const newTask: Task = {
@@ -48,6 +57,12 @@ function App() {
       <h1>
         Task Manager
       </h1>
+
+      <TaskCounter
+        total={totalTasks}
+        completed={completedTasks}
+        remaining={remainingTasks}
+      />
 
       <TaskForm 
         addTask={addTask}
