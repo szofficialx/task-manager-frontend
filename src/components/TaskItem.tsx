@@ -5,7 +5,7 @@ interface Props {
   task: Task;
   deleteTask: (id: number) => void;
   toggleTask: (id: number) => void;
-  updateTask: (id: number, title: string) => void;
+  updateTask: (id: number, newTitle: string) => void;
 }
 
 function TaskItem({ task, deleteTask, toggleTask, updateTask }: Props) {
@@ -67,6 +67,12 @@ function TaskItem({ task, deleteTask, toggleTask, updateTask }: Props) {
         }}
       >
         {task.title}
+      </span>
+
+      <span>
+        Priority:{" "}
+        {task.priority.charAt(0).toUpperCase() +
+          task.priority.slice(1)}
       </span>
 
       <button type="button" onClick={handleEdit}>

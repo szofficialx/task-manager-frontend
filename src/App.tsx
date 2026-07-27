@@ -4,7 +4,7 @@ import TaskList from "./components/TaskList";
 import TaskCounter from "./components/TaskCounter";
 import TaskSearch from "./components/TaskSearch";
 import TaskFilter from "./components/TaskFilter";
-import type { Task } from "./types/task";
+import type { Task, TaskPriority } from "./types/task";
 import type { TaskFilterValue } from "./components/TaskFilter";
 
 function App() {
@@ -34,37 +34,53 @@ function App() {
     return matchesSearch && matchesFilter;
 });
 
-  function addTask(title: string) {
+  function addTask(
+    title: string,
+    priority: TaskPriority,
+  ) {
     const newTask: Task = {
       id: Date.now(),
       title,
-      completed: false
+      completed: false,
+      priority,
     };
 
-    setTasks([...tasks, newTask]);
+    setTasks((currentTask) => [
+      ...currentTask,
+      newTask
+    ]);
   }
 
   function deleteTask(id: number) {
-    setTasks(
-      tasks.filter(task => task.id !== id)
+    setTasks((currentTask) =>
+      currentTask.filter(task => task.id !== id)
     )
   }
 
   function toggleTask(id: number) {
-    setTasks(
-      tasks.map(task =>
+    setTasks((currentTask) =>
+      currentTask.map(task =>
         task.id === id
-        ? {...task, completed: !task.completed}
+        ? {
+            ...task, 
+            completed: !task.completed
+          }
         : task
       )
     )
   }
 
-  function updateTask(id: number, newTitle: string) {
-    setTasks(
-      tasks.map((task) =>
+  function updateTask(
+    id: number, 
+    newTitle: string
+  ) {
+    setTasks((currentTask) =>
+      currentTask.map((task) =>
         task.id === id
-        ? { ...task, title: newTitle}
+        ? { 
+            ...task, 
+            title: newTitle
+          }
         : task
       ),
     );
