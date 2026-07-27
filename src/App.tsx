@@ -3,12 +3,15 @@ import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import TaskCounter from "./components/TaskCounter";
 import TaskSearch from "./components/TaskSearch";
+import TaskFilter from "./components/TaskFilter";
 import type { Task } from "./types/task";
+import type { TaskFilterValue } from "./components/TaskFilter";
 
 function App() {
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [filter, setFilter] = useState<TaskFilterValue>("all");
 
   const totalTasks = tasks.length;
 
@@ -18,11 +21,18 @@ function App() {
 
   const remainingTasks = totalTasks - completedTasks;
 
-  const filteredTasks = tasks.filter((task) =>
-    task.title
+  const filteredTasks = tasks.filter((task) => {
+    const matchesSearch = task.title
       .toLowerCase()
-      .includes(searchTerm.trim().toLowerCase()),
-  );
+      .includes(searchTerm.trim().toLowerCase())
+    
+    const matchesFilter =
+      filter === "all" ||
+      (filter === "completed" && task.completed) ||
+      (filter === "incomplete" && !task.completed)
+
+    return matchesSearch && matchesFilter;
+});
 
   function addTask(title: string) {
     const newTask: Task = {
@@ -81,6 +91,11 @@ function App() {
       <TaskSearch
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
+      />
+
+      <TaskFilter
+        currentFilter={filter}
+        onFilterChange={setFilter}
       />
 
       <TaskList 
