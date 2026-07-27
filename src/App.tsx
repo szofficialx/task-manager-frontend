@@ -2,11 +2,13 @@ import { useState } from "react";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import TaskCounter from "./components/TaskCounter";
+import TaskSearch from "./components/TaskSearch";
 import type { Task } from "./types/task";
 
 function App() {
 
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const totalTasks = tasks.length;
 
@@ -15,6 +17,12 @@ function App() {
   ).length;
 
   const remainingTasks = totalTasks - completedTasks;
+
+  const filteredTasks = tasks.filter((task) =>
+    task.title
+      .toLowerCase()
+      .includes(searchTerm.trim().toLowerCase()),
+  );
 
   function addTask(title: string) {
     const newTask: Task = {
@@ -52,6 +60,8 @@ function App() {
     );
   }
 
+
+
   return (
     <div>
       <h1>
@@ -68,8 +78,13 @@ function App() {
         addTask={addTask}
       />
 
+      <TaskSearch
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+      />
+
       <TaskList 
-        tasks={tasks}
+        tasks={filteredTasks}
         deleteTask={deleteTask}
         toggleTask={toggleTask}
         updateTask={updateTask}
