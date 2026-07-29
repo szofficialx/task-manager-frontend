@@ -4,26 +4,31 @@ import type { TaskPriority } from "../types/task";
 interface Props {
   addTask:(
     title: string,
-    priority: TaskPriority
+    priority: TaskPriority,
+    dueDate: string,
   ) => void;
 } 
 
 function TaskForm({ addTask }: Props) {
 
-  const [title,setTitle] = useState("");
+  const [title, setTitle] = useState("");
   const [priority, setPriority] = useState<TaskPriority>("medium");
+  const [dueDate, setDueDate] = useState("");
 
-  function handleSubmit(e:React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(
+    e:React.FormEvent<HTMLFormElement>
+  ) {
     e.preventDefault();
 
     const trimmedTitle = title.trim();
 
-    if (!trimmedTitle) return;
+    if (!trimmedTitle || !dueDate) return;
 
-    addTask(trimmedTitle, priority);
+    addTask(trimmedTitle, priority, dueDate);
 
     setTitle("");
     setPriority("medium");
+    setDueDate("");
   }
 
   return (
@@ -47,6 +52,14 @@ function TaskForm({ addTask }: Props) {
         <option value="medium">Medium</option>
         <option value="high">High</option>
       </select>
+
+      <input 
+        type="date"
+        value={dueDate}
+        onChange={(event) =>
+          setDueDate(event.target.value)
+        }
+      />
 
       <button type="submit">
         Add

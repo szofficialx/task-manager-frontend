@@ -37,29 +37,31 @@ function App() {
   function addTask(
     title: string,
     priority: TaskPriority,
+    dueDate: string,
   ) {
     const newTask: Task = {
       id: Date.now(),
       title,
       completed: false,
       priority,
+      dueDate,
     };
 
-    setTasks((currentTask) => [
-      ...currentTask,
+    setTasks((currentTasks) => [
+      ...currentTasks,
       newTask
     ]);
   }
 
   function deleteTask(id: number) {
-    setTasks((currentTask) =>
-      currentTask.filter(task => task.id !== id)
+    setTasks((currentTasks) =>
+      currentTasks.filter(task => task.id !== id)
     )
   }
 
   function toggleTask(id: number) {
-    setTasks((currentTask) =>
-      currentTask.map(task =>
+    setTasks((currentTasks) =>
+      currentTasks.map(task =>
         task.id === id
         ? {
             ...task, 
@@ -74,8 +76,8 @@ function App() {
     id: number, 
     newTitle: string
   ) {
-    setTasks((currentTask) =>
-      currentTask.map((task) =>
+    setTasks((currentTasks) =>
+      currentTasks.map((task) =>
         task.id === id
         ? { 
             ...task, 

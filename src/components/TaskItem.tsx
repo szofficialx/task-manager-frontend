@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Task } from "../types/task";
+import { getDueDateStatus } from "../utils/date";
 
 interface Props {
   task: Task;
@@ -8,9 +9,19 @@ interface Props {
   updateTask: (id: number, newTitle: string) => void;
 }
 
-function TaskItem({ task, deleteTask, toggleTask, updateTask }: Props) {
+function TaskItem({ 
+  task, 
+  deleteTask, 
+  toggleTask, 
+  updateTask 
+}: Props) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(task.title);
+
+  const dueDateStatus = getDueDateStatus(
+    task.dueDate,
+    task.completed
+  );
 
   function handleEdit() {
     setEditedTitle(task.title);
@@ -73,6 +84,10 @@ function TaskItem({ task, deleteTask, toggleTask, updateTask }: Props) {
         Priority:{" "}
         {task.priority.charAt(0).toUpperCase() +
           task.priority.slice(1)}
+      </span>
+
+      <span>
+        {dueDateStatus}
       </span>
 
       <button type="button" onClick={handleEdit}>
