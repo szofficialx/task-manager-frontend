@@ -32,36 +32,64 @@ function TaskForm({ addTask }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={title}
-        onChange={(e)=>setTitle(e.target.value)}
-        placeholder="Enter task"
-      />
+    <form 
+      onSubmit={handleSubmit}
+      className="grid gap-4 md:grid-cols-2"
+    >
+      <label className="md:col-span-2">
+        <span className="mb-1.5 block text-sm font-medium text-slate-700">
+          Task title
+        </span>
 
-      <select
-        value={priority}
-        onChange={(event) =>
-          setPriority(
-            event.target.value as TaskPriority
-          )
-        }
+        <input
+          type="text"
+          value={title}
+          onChange={(e)=>setTitle(e.target.value)}
+          placeholder="For example, learn React hooks"
+          className="w-full rounded-x1 border border-slate-300 bg-white px-4 py-2.5"
+        />
+      </label>
+      
+      <label>
+        <span className="mb-1.5 block text-sm font-medium text-slate-700">
+          Priority
+        </span>
+
+        <select
+          value={priority}
+          onChange={(event) =>
+            setPriority(
+              event.target.value as TaskPriority
+            )
+          }
+          className="w-full rounded-x1 border border-slate-300 bg-white px-4 py-2.5 text-slate-900"
+        >
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+      </label>
+      
+      <label>
+        <span className="mb-1.5 block text-sm font-medium text-slate-700">
+          Due date
+        </span>
+
+        <input 
+          type="date"
+          value={dueDate}
+          onChange={(event) =>
+            setDueDate(event.target.value)
+          }
+          className="w-full rounded-x1 border border-slate-300 bg-white px-4 py-2.5"
+          required
+        />
+      </label>
+
+      <button 
+        type="submit"
+        className="rounded-x1 bg-blue-600 px-5 py-2.5 font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-200 md:col-span-2"
       >
-        <option value="low">Low</option>
-        <option value="medium">Medium</option>
-        <option value="high">High</option>
-      </select>
-
-      <input 
-        type="date"
-        value={dueDate}
-        onChange={(event) =>
-          setDueDate(event.target.value)
-        }
-      />
-
-      <button type="submit">
         Add
       </button>
     </form>

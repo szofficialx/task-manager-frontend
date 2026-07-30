@@ -8,10 +8,10 @@ function TaskSearch({
   onSearchChange
 }: Props) {
   return (
-    <div>
-      <label htmlFor="task-search">
-        Search:
-      </label>
+    <label className="block">
+      <span className="mb-1.5 block text-sm font-medium text-slate-700">
+        Search tasks
+      </span>
 
       <input
         id="task-search" 
@@ -20,9 +20,10 @@ function TaskSearch({
         onChange={(event) =>
           onSearchChange(event.target.value)
         }
-        placeholder="Search tasks"
+        placeholder="Search by tasks title..."
+        className="w-full rounded-x1 border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-100"
       />
-    </div>
+    </label>
   );
 }
 

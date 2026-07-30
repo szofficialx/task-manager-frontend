@@ -14,9 +14,22 @@ function TaskList({
   toggleTask,
   updateTask
 }: Props) {
+  if (tasks.length === 0) {
+    return (
+      <div className="rounded-x1 border border-dashed border-slate-300 px-4 py-10 text-center">
+        <p className="font-medium text-slate-700">
+          No tasks found
+        </p>
+
+        <p className="mt-1 text-sm text-slate-500">
+          Add a task or change your search and filter
+        </p>
+      </div>
+    )
+  }
 
   return (
-    <div>
+    <ul className="space-y-3">
       {
         tasks.map(task => (
           <TaskItem 
@@ -28,7 +41,7 @@ function TaskList({
           />
         ))
       }
-    </div>
+    </ul>
   );
 
 }
