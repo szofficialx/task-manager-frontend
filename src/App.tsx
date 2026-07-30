@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import TaskCounter from "./components/TaskCounter";
@@ -9,9 +9,27 @@ import type { TaskFilterValue } from "./components/TaskFilter";
 
 function App() {
 
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task[]>(() => {
+    const savedTasks = localStorage.getItem("tasks");
+
+    if (!savedTasks) return [];
+
+    try {
+      return JSON.parse(savedTasks) as Task[];
+    } catch {
+      return [];
+    }
+  });
+
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState<TaskFilterValue>("all");
+
+  useEffect(() => {
+    localStorage.setItem(
+      "tasks",
+      JSON.stringify(tasks),
+    );
+  }, [tasks]);
 
   const totalTasks = tasks.length;
 
@@ -88,6 +106,9 @@ function App() {
     );
   }
 
+  function clearAllTasks() {
+    setTasks([]);
+  }
 
 
   return (
@@ -101,6 +122,14 @@ function App() {
         completed={completedTasks}
         remaining={remainingTasks}
       />
+
+      <button
+        type="button"
+        onClick={clearAllTasks}
+        disabled={tasks.length === 0}
+      >
+        Clear all
+      </button>
 
       <TaskForm 
         addTask={addTask}
