@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
-import TaskForm from "./components/TaskForm";
-import TaskList from "./components/TaskList";
-import TaskCounter from "./components/TaskCounter";
-import TaskSearch from "./components/TaskSearch";
-import TaskFilter from "./components/TaskFilter";
+import { Route, Routes } from "react-router";
+
+import Navbar from "./components/Navbar";
+
+import HomePage from "./pages/HomePage";
+import CompletedPage from "./pages/CompletedPage";
+import SettingsPage from "./pages/SettingsPage";
+import AboutPage from "./pages/AboutPage";
+import NotFoundPage from "./pages/NotFoundPage";
+
 import type { Task, TaskPriority } from "./types/task";
 import type { TaskFilterValue } from "./components/TaskFilter";
 
@@ -35,9 +40,12 @@ function App() {
 
   const completedTasks = tasks.filter(
     (task) => task.completed,
-  ).length;
+  );
 
-  const remainingTasks = totalTasks - completedTasks;
+  const completedTaskCount =
+    completedTasks.length
+
+  const remainingTasks = totalTasks - completedTaskCount;
 
   const filteredTasks = tasks.filter((task) => {
     const matchesSearch = task.title
@@ -106,72 +114,71 @@ function App() {
     );
   }
 
-  // function clearAllTasks() {
-  //   setTasks([]);
-  // }
+  function clearAllTasks() {
+    setTasks([]);
+  }
 
 
   return (
-    <main className="min-h-screen bg-slate-100 px-4 py-10">
-      <div className="mx-auto max-w-4x1">
-        <header className="mb-8">
-          <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-blue-600">
-            Productivity
-          </p>
-
-          <h1 className="text-3x1 font-bold tracking-tight text-slate-900 sm:text-4x1">
-            Task Manager
-          </h1>
-
-          <p className="mt-2 text-slate-600">
-            Organize your work and keep track of your progress
-          </p>
-        </header>
-
-        <div className="space-y-6">
-          <TaskCounter
-            total={totalTasks}
-            completed={completedTasks}
-            remaining={remainingTasks}
-          />
-
-          {/* <button
-            type="button"
-            onClick={clearAllTasks}
-            disabled={tasks.length === 0}
-          >
-            Clear all
-          </button> */}
-
-          <section className="rounded-2x1">
-            <h2 className="mb-4 text-lg font-semibold text-slate-900">
-              Add a new task
-            </h2>
-
-            <TaskForm addTask={addTask} />
-          </section>
-
-          <section className="rounded-2x1 border border-slate-200 bg-white p-5 shadow-sm">
-            <div className="space-y-4">
-              <TaskSearch
+    <main className="min-h-screen bg-slate-100 px-4 py-6 sm:py-10">
+      <div className="mx-auto max-w-5x1">
+        <Navbar />
+        
+        <Routes>
+          <Route 
+            path="/"
+            element={
+              <HomePage 
+                tasks={filteredTasks}
+                totalTasks={totalTasks}
+                completedTasks={
+                  completedTaskCount
+                }
+                remainingTasks={remainingTasks}
                 searchTerm={searchTerm}
-                onSearchChange={setSearchTerm}
-              />
-
-              <TaskFilter
                 currentFilter={filter}
+                addTask={addTask}
+                deleteTask={deleteTask}
+                toggleTask={toggleTask}
+                updateTask={updateTask}
+                onSearchChange={setSearchTerm}
                 onFilterChange={setFilter}
               />
+            }
+          />
 
-              <TaskList 
-                tasks={filteredTasks}
+          <Route 
+            path="/completed"
+            element={
+              <CompletedPage 
+                tasks={completedTasks}
                 deleteTask={deleteTask}
                 toggleTask={toggleTask}
                 updateTask={updateTask}
               />
-            </div>
-          </section>
-        </div>
+            }
+          />
+
+          <Route 
+            path="/settings"
+            element={
+              <SettingsPage 
+                taskCount={totalTasks}
+                clearAllTasks={clearAllTasks}
+              />
+            }
+          />
+
+          <Route 
+            path="/about"
+            element={<AboutPage />}
+          />
+
+          <Route 
+            path="*"
+            element={<NotFoundPage />}
+          />
+        </Routes>
       </div>
     </main>
   );
