@@ -35,7 +35,7 @@ function CompletedPage({
         </p>
       </header>
 
-      <section className="rounded-2x1 border border-slate-200 bg-white p-5 shadow-sm">
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         {tasks.length === 0 ? (
           <div className="rounded-x1 border border-dashed border-slate-300 px-4 py-12 text-center">
             <p className="font-medium text-slate-700">

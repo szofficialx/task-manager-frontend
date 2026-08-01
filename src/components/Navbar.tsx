@@ -39,7 +39,7 @@ function Navbar() {
   }
 
   return (
-    <nav className="mb-8 rounded-2x1 border border-slate-200 bg-white p-3 shadow-sm">
+    <nav className="mb-8 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
       <div className="flex flex-wrap gap-2">
         {navigationItems.map((item) => (
           <NavLink

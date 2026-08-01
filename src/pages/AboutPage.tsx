@@ -11,7 +11,7 @@ function AboutPage() {
         </h1>
       </header>
 
-      <section className="rounded-2x1 border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <h2 className="text-x1 font-semibold text-slate-900">
           React Task Manager
         </h2>

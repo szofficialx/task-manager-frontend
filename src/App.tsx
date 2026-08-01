@@ -11,30 +11,78 @@ import NotFoundPage from "./pages/NotFoundPage";
 
 import type { Task, TaskPriority } from "./types/task";
 import type { TaskFilterValue } from "./components/TaskFilter";
+import { getTasks } from "./services/taskApi";
 
 function App() {
+  const [tasks, setTasks] = useState<Task[]>([]);
 
-  const [tasks, setTasks] = useState<Task[]>(() => {
-    const savedTasks = localStorage.getItem("tasks");
+  // const [tasks, setTasks] = useState<Task[]>(() => {
+  //   const savedTasks = localStorage.getItem("tasks");
 
-    if (!savedTasks) return [];
+  //   if (!savedTasks) return [];
 
-    try {
-      return JSON.parse(savedTasks) as Task[];
-    } catch {
-      return [];
-    }
-  });
+  //   try {
+  //     return JSON.parse(savedTasks) as Task[];
+  //   } catch {
+  //     return [];
+  //   }
+  // });
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState<TaskFilterValue>("all");
 
+  // useEffect(() => {
+  //   localStorage.setItem(
+  //     "tasks",
+  //     JSON.stringify(tasks),
+  //   );
+  // }, [tasks]);
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
+
   useEffect(() => {
-    localStorage.setItem(
-      "tasks",
-      JSON.stringify(tasks),
-    );
-  }, [tasks]);
+    const controller =
+      new AbortController();
+
+    async function loadTasks() {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const apiTasks = await getTasks(
+          controller.signal
+        );
+
+        setTasks(apiTasks);
+      } catch(error: unknown) {
+        if (
+          error instanceof Error &&
+          error.name === "AbortError"
+        ) {
+          return;
+        }
+
+        const message =
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occured.";
+        
+        setError(message);
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    void loadTasks();
+
+    return () => {
+      controller.abort();
+    };
+  }, [reloadKey]);
 
   const totalTasks = tasks.length;
 
@@ -118,67 +166,111 @@ function App() {
     setTasks([]);
   }
 
+  function retryLoadingTasks() {
+    setReloadKey(
+      (currentKey) => currentKey + 1,
+    );
+  }
 
   return (
     <main className="min-h-screen bg-slate-100 px-4 py-6 sm:py-10">
       <div className="mx-auto max-w-5x1">
         <Navbar />
-        
-        <Routes>
-          <Route 
-            path="/"
-            element={
-              <HomePage 
-                tasks={filteredTasks}
-                totalTasks={totalTasks}
-                completedTasks={
-                  completedTaskCount
-                }
-                remainingTasks={remainingTasks}
-                searchTerm={searchTerm}
-                currentFilter={filter}
-                addTask={addTask}
-                deleteTask={deleteTask}
-                toggleTask={toggleTask}
-                updateTask={updateTask}
-                onSearchChange={setSearchTerm}
-                onFilterChange={setFilter}
-              />
-            }
-          />
 
-          <Route 
-            path="/completed"
-            element={
-              <CompletedPage 
-                tasks={completedTasks}
-                deleteTask={deleteTask}
-                toggleTask={toggleTask}
-                updateTask={updateTask}
-              />
-            }
-          />
+        {isLoading ? (
+          <section
+            className="rounded-2xl border border-slate-200 bg-white px-6 py-16 text-center shadow-sm"
+            aria-live="polite"
+          >
+            <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-blue-600" />
+          
+            <h1 className="mt-5 text-xl font-semibold text-slate-900">
+              Loading tasks
+            </h1>
 
-          <Route 
-            path="/settings"
-            element={
-              <SettingsPage 
-                taskCount={totalTasks}
-                clearAllTasks={clearAllTasks}
-              />
-            }
-          />
+            <p className="mt-2 text-slate-500">
+              Getting your tasks from the
+              API...
+            </p>
+          </section>
+        ) : error ? (
+          <section 
+            className="rounded-2xl border border-rose-200 bg-white px-6 py-16 text-center shadow-sm"
+            role="alert"
+          >
+            <h1 className="text-xl font-semibold text-rose-700">
+              Unable to load tasks
+            </h1>
 
-          <Route 
-            path="/about"
-            element={<AboutPage />}
-          />
+            <p className="mt-2 text-slate-600">
+              {error}
+            </p>
 
-          <Route 
-            path="*"
-            element={<NotFoundPage />}
-          />
-        </Routes>
+            <button
+              type="button"
+              onClick={retryLoadingTasks}
+              className="mt-6 rounded-xl bg-blue-600 px-5 py-2.5 font-semibold text-white transition hover:bg-blue-700"
+            >
+              Try again
+            </button>
+          </section>
+        ) : (
+          <Routes>
+            <Route 
+              path="/"
+              element={
+                <HomePage 
+                  tasks={filteredTasks}
+                  totalTasks={totalTasks}
+                  completedTasks={
+                    completedTaskCount
+                  }
+                  remainingTasks={remainingTasks}
+                  searchTerm={searchTerm}
+                  currentFilter={filter}
+                  addTask={addTask}
+                  deleteTask={deleteTask}
+                  toggleTask={toggleTask}
+                  updateTask={updateTask}
+                  onSearchChange={setSearchTerm}
+                  onFilterChange={setFilter}
+                />
+              }
+            />
+
+            <Route 
+              path="/completed"
+              element={
+                <CompletedPage 
+                  tasks={completedTasks}
+                  deleteTask={deleteTask}
+                  toggleTask={toggleTask}
+                  updateTask={updateTask}
+                />
+              }
+            />
+
+            <Route 
+              path="/settings"
+              element={
+                <SettingsPage 
+                  taskCount={totalTasks}
+                  clearAllTasks={clearAllTasks}
+                />
+              }
+            />
+
+            <Route 
+              path="/about"
+              element={<AboutPage />}
+            />
+
+            <Route 
+              path="*"
+              element={<NotFoundPage />}
+            />
+          </Routes>
+        )}
       </div>
     </main>
   );

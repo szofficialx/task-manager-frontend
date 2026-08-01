@@ -2,7 +2,7 @@ import { Link } from "react-router";
 
 function NotFoundPage() {
   return (
-    <section className="rounded-2x1 border border-slate-200 bg-white px-6 py-16 text-center shadow-sm">
+    <section className="rounded-2xl border border-slate-200 bg-white px-6 py-16 text-center shadow-sm">
       <p className="text-sm font-semibold uppercase tracking-widest text-blue-600"> 
         Error 404
       </p>

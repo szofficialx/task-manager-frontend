@@ -11,7 +11,7 @@ function TaskCounter({
 }: Props ) {
   return (
     <div className="grid gap-4 sm:grid-cols-3">
-      <div className="rounded-2x1 border border-blue-200 bg-blue-50 p-5">
+      <div className="rounded-2xl border border-blue-200 bg-blue-50 p-5">
         <p className="text-sm font-medium text-blue-700">
           Total tasks
         </p>
@@ -21,7 +21,7 @@ function TaskCounter({
         </p>
       </div>
       
-      <div className="rounded-2x1 border border-emerald-200 bg-emerald-50 p-5">
+      <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
         <p className="text-sm font-medium text-emerald-700">
           Completed
         </p>
@@ -31,7 +31,7 @@ function TaskCounter({
         </p>
       </div>
 
-      <div className="rounded-2x1 border border-amber-200 bg-amber-50 p-5">
+      <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
         <p className="text-sm font-medium text-amber-700">
           Remaining
         </p>

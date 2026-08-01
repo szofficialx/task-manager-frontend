@@ -74,7 +74,7 @@ function HomePage({
           remaining={remainingTasks}
         />
 
-        <section className="rounded-2x1 border border-slate-200 bg-white p-5 shadow-sm">
+        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <h2 className="mb-4 text-lg font-semibold text-slate-900">
             Add a new task
           </h2>
@@ -82,7 +82,7 @@ function HomePage({
           <TaskForm addTask={addTask}/>
         </section>
 
-        <section className="rounded-2x1 border border-slate-200 bg-white p-5 shadow-sm">
+        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="space-y-4">
             <TaskSearch 
               searchTerm={searchTerm}
